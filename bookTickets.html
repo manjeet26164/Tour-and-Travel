@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tour Packages</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('V1SVnMzvyQkbCD8FI'); // replace with your actual public key
+</script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #d4d0d0;
+      text-align: center;
+      margin: 20px;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+      animation: slideInDown 1s ease-out;
+    }
+    #packages-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px;
+      width: 280px;
+      text-align: center;
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .card h3 {
+      color: #007BFF;
+      margin: 10px 0;
+    }
+    .card p {
+      color: #555;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 16px;
+      transition: 0.3s;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #paymentModal {
+      display: none;
+      position: fixed;
+      top: 30%;
+      left: 35%;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+      z-index: 1000;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Available Tour Packages</h2>
+  <div id="packages-container"></div>
+
+  <div id="paymentModal">
+    <p>Pay <span id="amountDisplay"></span> to confirm your ticket</p>
+    <button onclick="confirmPayment()">Pay Now</button>
+  </div>
+
+  <script>
+    let selectedPackage = null;
+    let allPackages = {};
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Check if user is logged in
+      let isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view tour packages.");
+        window.location.href = "contact.html";
+        return;
+      }
+
+      // Retrieve tour package data from localStorage
+      let storedData = localStorage.getItem("bookingData");
+      if (!storedData) {
+        console.error("No booking data found in Local Storage!");
+        document.getElementById("packages-container").innerHTML = "<p>No tour packages available.</p>";
+        return;
+      }
+
+      let tourPackages = JSON.parse(storedData);
+      allPackages = tourPackages; // Save globally for later access
+
+      let container = document.getElementById("packages-container");
+      let delay = 0.1;
+
+      for (let key in tourPackages) {
+        let package = tourPackages[key];
+
+        let card = document.createElement("div");
+        card.classList.add("card");
+        card.style.animationDelay = `${delay}s`;
+        delay += 0.1;
+
+        card.innerHTML = `
+          <img src="${package.image}" alt="${package.destination}">
+          <h3>${package.destination}</h3>
+          <p>Duration: ${package.duration}</p>
+          <p>Price: ₹${package.price}</p>
+          <button onclick="bookNow('${key}')">Book Now</button>
+        `;
+
+        container.appendChild(card);
+      }
+    });
+
+    function bookNow(key) {
+      let user = localStorage.getItem('adventourUser');
+      selectedPackage = allPackages[key];
+
+      if (confirm(`Hi ${user}, do you want to proceed with booking to: ${selectedPackage.destination}?`)) {
+        document.getElementById("amountDisplay").innerText = `₹${selectedPackage.price}`;
+        document.getElementById("paymentModal").style.display = "block";
+      }
+    }
+
+    function confirmPayment() {
+    alert("Payment successful! Sending email...");
+
+    // Hide the payment modal
+    document.getElementById("paymentModal").style.display = "none";
+
+    // Get user details
+    let email = localStorage.getItem("adventourUser"); // Ensure you store this at login
+    let user = localStorage.getItem("adventourUser");
+
+    // Send confirmation email via EmailJS
+    emailjs.send("service_rlowogu", "template_0w425t9", {
+        to_email: email, // recipient's email (from localStorage or form input)
+        to_name: user,   // recipient's name
+        destination: selectedPackage.destination,
+        duration: selectedPackage.duration,
+        price: selectedPackage.price
+    }).then(function(response) {
+        console.log("Email sent!", response.status);
+        confetti(); // 🎉 Celebration effect
+        setTimeout(() => {
+            alert('Thanks for booking ticket with Adventour')
+        //    window.location.href = "index.html";
+        }, 2000);
+    }, function(error) {
+        console.error("Email failed", error);
+        alert("Failed to send email. Try again.");
+    });
+}
+
+  </script>
+
+</body>
+</html>

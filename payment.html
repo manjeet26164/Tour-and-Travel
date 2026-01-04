@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment - Adventour</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f7;
+      text-align: center;
+      padding: 40px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      margin: auto;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    h2 {
+      color: #333;
+    }
+    .details {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Confirm Your Payment</h2>
+    <div class="details">
+      <p><strong>Package:</strong> Manali Tour</p>
+      <p><strong>Price:</strong> ₹500.00</p>
+    </div>
+    <button id="rzp-button">Pay with Razorpay</button>
+  </div>
+
+  <script>
+    document.getElementById('rzp-button').onclick = function (e) {
+      var options = {
+        "key": "rzp_test_YourTestKeyHere", // Replace with your test/live Razorpay key
+        "amount": 50000, // Amount in paise (₹500.00)
+        "currency": "INR",
+        "name": "Adventour",
+        "description": "Tour Package Payment",
+        "handler": function (response) {
+          alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+          // Optionally redirect or save transaction
+        },
+        "prefill": {
+          "name": "Your Name",
+          "email": "youremail@example.com",
+          "contact": "9999999999"
+        },
+        "theme": {
+          "color": "#007bff"
+        }
+      };
+      var rzp = new Razorpay(options);
+      rzp.open();
+      e.preventDefault();
+    }
+  </script>
+
+</body>
+</html>
