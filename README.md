@@ -34,5 +34,5 @@
 ---
 ## Contact 
 
-  Github : https://github.com/manjeet26164
-  email : manjeetyadav26164@gmail.com
+ * Github : https://github.com/manjeet26164
+ * Email : manjeetyadav26164@gmail.com
