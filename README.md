@@ -6,10 +6,11 @@
 
 ## 📸 Project Screenshots
 
-![Uploading Screenshot 2026-01-05 153115.png…]()
+<img width="1872" height="984" alt="Screenshot 2026-01-05 153115" src="https://github.com/user-attachments/assets/f3267e07-c7b1-4a0b-bc37-0e97fc222fe9" />
 
-![Uploading Screenshot 2026-01-05 153127.png…]()
 
+
+<img width="1871" height="989" alt="Screenshot 2026-01-05 153127" src="https://github.com/user-attachments/assets/c1dfd599-b170-490a-b8c1-6454daf82ca4" />
 
 ---
 
@@ -31,7 +32,7 @@
 * **Assets:** High-quality imagery for destination showcases.
 
 ---
-** Contact 
+## Contact 
 
-  Github : 
+  Github : https://github.com/manjeet26164
   email : manjeetyadav26164@gmail.com
